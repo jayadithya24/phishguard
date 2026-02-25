@@ -8,7 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 const API_BASE =
   window.location.hostname === "localhost"
     ? "http://localhost:5000/api"
-    : "https://phishguard.onrender.com/api";
+    : "https://phishguard-jqr9.onrender.com/api";
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
