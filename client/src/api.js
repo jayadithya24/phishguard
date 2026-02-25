@@ -6,7 +6,9 @@
 // Otherwise fallback to localhost for development
 
 const API_BASE =
-  process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000/api"
+    : "https://phishguard.onrender.com/api";
 
 /* =========================
    FETCH HISTORY (Protected)
