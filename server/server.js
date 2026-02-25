@@ -13,23 +13,26 @@ const scanRoutes = require("./routes/scanRoutes");
 const app = express();
 
 /* ================================
-   🌍 CORS CONFIG (DEV + PROD)
+   🌍 CORS CONFIG (DEV + PROD SAFE)
 ================================ */
 
+// Allowed origins
 const allowedOrigins = [
-  "http://localhost:3000",                 // local frontend
-  process.env.FRONTEND_URL                 // production frontend (Vercel)
-];
+  "http://localhost:3000",                // Local frontend
+  process.env.FRONTEND_URL                // Vercel frontend (set in Render)
+].filter(Boolean); // Removes undefined values
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin (like Postman)
+      // Allow requests with no origin (Postman, curl, etc.)
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       } else {
+        console.log("❌ Blocked by CORS:", origin);
+        console.log("✅ Allowed origins:", allowedOrigins);
         return callback(new Error("Not allowed by CORS"));
       }
     },
@@ -63,5 +66,5 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
