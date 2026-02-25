@@ -10,42 +10,67 @@ exports.scanURL = async (req, res) => {
       return res.status(400).json({ error: "URL and text are required" });
     }
 
-    // 1️⃣ URL Analysis (Rule-based)
+    /* ==========================================
+       1️⃣ URL ANALYSIS (Rule-based score)
+    ========================================== */
     const urlScore = analyzeURL(url);
 
-    // 2️⃣ Call ML Service
-    const mlResponse = await fetch("http://localhost:8000/predict", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text })
+    /* ==========================================
+       2️⃣ MOCK AI ANALYSIS (TEMP FOR DEPLOYMENT)
+    ========================================== */
+
+    const suspiciousKeywords = [
+      "login",
+      "verify",
+      "bank",
+      "account",
+      "secure",
+      "update",
+      "free",
+      "password",
+      "urgent",
+      "confirm"
+    ];
+
+    let keywordScore = 0;
+
+    suspiciousKeywords.forEach((word) => {
+      if (text.toLowerCase().includes(word)) {
+        keywordScore += 1;
+      }
     });
 
-    if (!mlResponse.ok) {
-      throw new Error("ML service error");
-    }
+    // Convert keyword hits into probability (0 → 1 range)
+    let mlProbability = Math.min(keywordScore * 0.15, 1);
 
-    const mlData = await mlResponse.json();
+    /* ==========================================
+       3️⃣ COMBINE URL + AI SCORE
+    ========================================== */
 
-    // Adjust this depending on your ML response structure
-    const mlProbability = mlData.phishingProbability || 0;
-
-    // 3️⃣ Combine Scores
     const { finalScore, status } =
       calculateFinalRisk(urlScore, mlProbability);
 
-    // 4️⃣ Save to MongoDB (FIXED)
+    /* ==========================================
+       4️⃣ SAVE TO DATABASE
+    ========================================== */
+
     const newScan = new ScanReport({
       url,
       text,
-      urlRiskScore: urlScore,   // 🔥 FIXED
+      urlRiskScore: urlScore,
+      finalRiskScore: finalScore,
+      status,
       user: req.user.id
     });
 
     await newScan.save();
 
-    // 5️⃣ Send Response
+    /* ==========================================
+       5️⃣ RESPONSE
+    ========================================== */
+
     res.json({
-      message: "AI Scan completed",
+      message: "AI Scan completed successfully",
       data: {
         url,
         text,
