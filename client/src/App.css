@@ -1209,3 +1209,39 @@ body {
     font-size: 12px;
   }
 }
+
+/* =============================== */
+/* ===== FINAL MOBILE FIX ======== */
+/* =============================== */
+
+@media (max-width: 768px) {
+
+  /* Remove fixed header height */
+  .top-header {
+    height: auto !important;
+    padding: 12px 15px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  /* Keep header content aligned properly */
+  .header-right {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  /* Make logout fit */
+  .logout-btn {
+    width: auto !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+  }
+
+  /* Prevent overlap */
+  .main-content {
+    padding-top: 15px !important;
+  }
+}
