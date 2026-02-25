@@ -1,8 +1,17 @@
-const API_BASE = "http://localhost:5000/api";
+/* =====================================================
+   🌍 API BASE CONFIG (DEV + PRODUCTION SAFE)
+===================================================== */
+
+// Use environment variable if available (Vercel)
+// Otherwise fallback to localhost for development
+
+const API_BASE =
+  process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 /* =========================
    FETCH HISTORY (Protected)
 ========================= */
+
 export const fetchHistory = async () => {
   const token = localStorage.getItem("token");
 
@@ -23,15 +32,17 @@ export const fetchHistory = async () => {
     return [];
   }
 
-  if (!res.ok) return [];
+  if (!res.ok) {
+    throw new Error("Failed to fetch history");
+  }
 
   return res.json();
 };
 
-
 /* =========================
    SCAN URL (Protected)
 ========================= */
+
 export const scanURL = async (data) => {
   const token = localStorage.getItem("token");
 
@@ -57,10 +68,10 @@ export const scanURL = async (data) => {
   return response.json();
 };
 
-
 /* =========================
    DELETE SCAN (ADMIN ONLY)
 ========================= */
+
 export const deleteHistory = async (id) => {
   const token = localStorage.getItem("token");
 
