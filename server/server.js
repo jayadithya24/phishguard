@@ -22,24 +22,31 @@ const allowedOrigins = [
   process.env.FRONTEND_URL                // Vercel frontend (set in Render)
 ].filter(Boolean); // Removes undefined values
 
+/* ================================
+   🌍 CORS CONFIG (FINAL FIX)
+================================ */
+
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (Postman, curl, etc.)
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
+      // Allow localhost
+      if (origin === "http://localhost:3000") {
         return callback(null, true);
-      } else {
-        console.log("❌ Blocked by CORS:", origin);
-        console.log("✅ Allowed origins:", allowedOrigins);
-        return callback(new Error("Not allowed by CORS"));
       }
+
+      // Allow any vercel deployment of your app
+      if (origin.endsWith(".vercel.app")) {
+        return callback(null, true);
+      }
+
+      console.log("❌ Blocked by CORS:", origin);
+      return callback(new Error("Not allowed by CORS"));
     },
     credentials: true
   })
 );
-
 /* ================================
    🧾 MIDDLEWARE
 ================================ */
