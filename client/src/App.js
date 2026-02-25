@@ -17,7 +17,7 @@ import SecurityStats from "./components/SecurityStats";
 import "./App.css";
 
 /* ================= PAGE COMPONENTS ================= */
-
+console.log("Build version: 3");
 function DashboardPage() {
   return <SecurityStats />;
 }
