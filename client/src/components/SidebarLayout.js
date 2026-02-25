@@ -6,15 +6,22 @@ const SidebarLayout = ({ user, setUser, children }) => {
   const navigate = useNavigate();
 
   const [collapsed, setCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const pageTitle =
     location.pathname.replace("/", "").toUpperCase() || "DASHBOARD";
-
-  // Close mobile sidebar on route change
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [location.pathname]);
 
   return (
     <div className="layout">
@@ -22,53 +29,50 @@ const SidebarLayout = ({ user, setUser, children }) => {
       {/* ===== SIDEBAR ===== */}
       <div
         className={`sidebar 
-          ${collapsed ? "collapsed" : ""} 
-          ${mobileOpen ? "mobile-open" : ""}`}
+        ${collapsed ? "collapsed" : ""} 
+        ${isMobile ? "mobile" : ""} 
+        ${mobileOpen ? "open" : ""}`}
       >
-
-        {/* Header */}
         <div className="sidebar-header">
           <div className="sidebar-logo">
             {collapsed ? "🛡" : "🛡 PhishGuard"}
           </div>
 
-          <button
-            className="collapse-btn"
-            onClick={() => setCollapsed(!collapsed)}
-          >
-            {collapsed ? "➡" : "⬅"}
-          </button>
+          {!isMobile && (
+            <button
+              className="collapse-btn"
+              onClick={() => setCollapsed(!collapsed)}
+            >
+              {collapsed ? "➡" : "⬅"}
+            </button>
+          )}
+
+          {isMobile && (
+            <button
+              className="collapse-btn"
+              onClick={() => setMobileOpen(false)}
+            >
+              ✖
+            </button>
+          )}
         </div>
 
-        {/* Navigation */}
         <div className="sidebar-nav">
-          <Link
-            to="/dashboard"
-            className={location.pathname === "/dashboard" ? "active" : ""}
-          >
+          <Link to="/dashboard" onClick={() => setMobileOpen(false)}>
             🏠 {!collapsed && "Dashboard"}
           </Link>
 
-          <Link
-            to="/scan"
-            className={location.pathname === "/scan" ? "active" : ""}
-          >
+          <Link to="/scan" onClick={() => setMobileOpen(false)}>
             🔍 {!collapsed && "Scan"}
           </Link>
 
           {user?.role === "admin" && (
-            <Link
-              to="/analytics"
-              className={location.pathname === "/analytics" ? "active" : ""}
-            >
+            <Link to="/analytics" onClick={() => setMobileOpen(false)}>
               📊 {!collapsed && "Analytics"}
             </Link>
           )}
 
-          <Link
-            to="/history"
-            className={location.pathname === "/history" ? "active" : ""}
-          >
+          <Link to="/history" onClick={() => setMobileOpen(false)}>
             🗂 {!collapsed && "History"}
           </Link>
         </div>
@@ -77,16 +81,15 @@ const SidebarLayout = ({ user, setUser, children }) => {
       {/* ===== MAIN CONTENT ===== */}
       <div className="main-content">
 
-        {/* Top Header */}
         <div className="top-header">
-
-          {/* Mobile Hamburger */}
-          <button
-            className="mobile-menu-btn"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            ☰
-          </button>
+          {isMobile && (
+            <button
+              className="mobile-menu-btn"
+              onClick={() => setMobileOpen(true)}
+            >
+              ☰
+            </button>
+          )}
 
           <h2>{pageTitle}</h2>
 
@@ -110,7 +113,6 @@ const SidebarLayout = ({ user, setUser, children }) => {
         <div className="page-content">
           {children}
         </div>
-
       </div>
     </div>
   );
