@@ -1005,9 +1005,7 @@ body {
 
 
 /* Hide hamburger on desktop */
-.mobile-menu-btn {
-  display: none;
-}
+
 .layout {
   display: flex;
   width: 100%;
@@ -1072,9 +1070,7 @@ body {
 
 
 /* Hide hamburger on desktop */
-.mobile-menu-btn {
-  display: none;
-}
+
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -1125,9 +1121,7 @@ body {
 
 
 
-.mobile-menu-btn {
-  display: none;
-}
+
 
 /* ===== TABLE SCROLL FIX ===== */
 .table-wrapper {
@@ -1164,6 +1158,19 @@ body {
   }
 }
 
+/* ===== MOBILE MENU BUTTON FIX ===== */
+
 .mobile-menu-btn {
   display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: block;
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
 }
