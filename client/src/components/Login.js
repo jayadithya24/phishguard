@@ -1,16 +1,25 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+/* ==========================================
+   🌍 API BASE (DEV + PRODUCTION SAFE)
+========================================== */
+
+const API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000/api"
+    : "https://phishguard.onrender.com/api";
+
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // ✅ navigation hook
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -21,13 +30,8 @@ const Login = ({ onLogin }) => {
       const data = await res.json();
 
       if (res.ok) {
-        // Store token
         localStorage.setItem("token", data.token);
-
-        // Update App state
         onLogin(data.token);
-
-        // Redirect to dashboard
         navigate("/dashboard");
       } else {
         alert(data.message || "Login failed");
