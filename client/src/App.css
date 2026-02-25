@@ -669,16 +669,7 @@ body {
 
 /* ===== FINAL SIDEBAR (CLEAN) ===== */
 
-.sidebar {
-  width: 240px;
-  background: #0f1c2e;
-  padding: 20px 15px;
-  display: flex;
-  flex-direction: column;
-  transition: width 0.3s ease;
-  border-right: 1px solid rgba(255,255,255,0.05);
-  box-shadow: 4px 0 20px rgba(0,0,0,0.4);
-}
+
 
 .sidebar.collapsed {
   width: 80px;
@@ -980,30 +971,10 @@ body {
   color: white;
 }
 /* Default desktop */
-.sidebar {
-  width: 240px;
-  min-height: 100vh;
-}
+
 
 /* Mobile Fix */
-@media (max-width: 768px) {
-  .sidebar {
-    position: fixed;
-    left: -240px;
-    top: 0;
-    transition: 0.3s ease;
-    z-index: 1000;
-  }
 
-  .sidebar.open {
-    left: 0;
-  }
-
-  .main-content {
-    margin-left: 0 !important;
-    width: 100%;
-  }
-}
 .menu-toggle {
   display: none;
 }
@@ -1017,56 +988,21 @@ body {
     color: white;
   }
 }
-@media (max-width: 768px) {
-  .sidebar {
-    width: 70px;
-  }
-}
+
 /* ===== Layout ===== */
 .layout {
   display: flex;
 }
 
 /* ===== Sidebar ===== */
-.sidebar {
-  width: 240px;
-  min-height: 100vh;
-  transition: 0.3s ease;
-  background: #0d1b2a;
-  color: white;
-}
+
 
 .sidebar.collapsed {
   width: 70px;
 }
 
 /* ===== Mobile Fix ===== */
-@media (max-width: 768px) {
-  .sidebar {
-    position: fixed;
-    left: -240px;
-    top: 0;
-    z-index: 1000;
-  }
 
-  .sidebar.mobile-open {
-    left: 0;
-  }
-
-  .main-content {
-    width: 100%;
-    margin-left: 0 !important;
-  }
-
-  .mobile-menu-btn {
-    display: block;
-    margin-right: 15px;
-    font-size: 22px;
-    background: none;
-    border: none;
-    color: white;
-  }
-}
 
 /* Hide hamburger on desktop */
 .mobile-menu-btn {
@@ -1079,11 +1015,7 @@ body {
 }
 
 /* Sidebar */
-.sidebar {
-  width: 240px;
-  background: #0f172a;
-  transition: all 0.3s ease;
-}
+
 
 .sidebar.collapsed {
   width: 70px;
@@ -1096,31 +1028,7 @@ body {
 }
 
 /* MOBILE STYLES */
-@media (max-width: 768px) {
-  .sidebar {
-    position: fixed;
-    left: -250px;
-    top: 0;
-    height: 100%;
-    z-index: 1000;
-  }
 
-  .sidebar.open {
-    left: 0;
-  }
-
-  .main-content {
-    width: 100%;
-  }
-
-  .mobile-menu-btn {
-    margin-right: 10px;
-    font-size: 20px;
-    background: none;
-    border: none;
-    color: white;
-  }
-}
 .table-wrapper {
   overflow-x: auto;
 }
@@ -1138,12 +1046,7 @@ body {
 }
 
 /* ===== Sidebar ===== */
-.sidebar {
-  width: 240px;
-  background: #0f172a;
-  color: white;
-  transition: all 0.3s ease;
-}
+
 
 .sidebar.collapsed {
   width: 70px;
@@ -1166,36 +1069,7 @@ body {
 }
 
 /* ===== Mobile Styles ===== */
-@media (max-width: 768px) {
 
-  .sidebar {
-    position: fixed;
-    left: -250px;
-    top: 0;
-    height: 100%;
-    z-index: 1001;
-  }
-
-  .sidebar.open {
-    left: 0;
-  }
-
-  .mobile-menu-btn {
-    display: block;
-    font-size: 22px;
-    background: none;
-    border: none;
-    color: white;
-    margin-right: 10px;
-  }
-
-  .sidebar-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 1000;
-  }
-}
 
 /* Hide hamburger on desktop */
 .mobile-menu-btn {
@@ -1222,16 +1096,6 @@ body {
 }
 
 /* ===== SIDEBAR ===== */
-.sidebar {
-  width: 240px;
-  min-height: 100vh;
-  background: #0f1c2e;
-  padding: 20px 15px;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s ease;
-  border-right: 1px solid rgba(255,255,255,0.05);
-}
 
 .sidebar.collapsed {
   width: 80px;
@@ -1259,32 +1123,7 @@ body {
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-/* ===== MOBILE ===== */
-@media (max-width: 768px) {
 
-  .sidebar {
-    position: fixed;
-    left: -250px;
-    top: 0;
-    height: 100%;
-    z-index: 1001;
-  }
-
-  .mobile-menu-btn {
-    display: block;
-    font-size: 22px;
-    background: none;
-    border: none;
-    color: white;
-  }
-
-  .sidebar-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 1000;
-  }
-}
 
 .mobile-menu-btn {
   display: none;
@@ -1294,4 +1133,37 @@ body {
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
+}
+/* ===== MOBILE SIDEBAR FIX ===== */
+@media (max-width: 768px) {
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -240px;   /* completely hidden */
+    width: 240px;
+    height: 100vh;
+    z-index: 1001;
+    transition: left 0.3s ease;
+  }
+
+  .sidebar.open {
+    left: 0;   /* fully visible */
+  }
+
+  .main-content {
+    width: 100%;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+    font-size: 22px;
+    background: none;
+    border: none;
+    color: white;
+  }
+}
+
+.mobile-menu-btn {
+  display: none;
 }
