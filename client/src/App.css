@@ -16,9 +16,9 @@ body {
 
 /* Layout */
 .dashboard {
-  padding: 40px;
-  max-width: 900px;
-  margin: auto;
+  padding: 15px;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Card */
@@ -589,8 +589,8 @@ body {
 
 .main-content {
   flex: 1;
-  padding: 30px;
-  overflow-y: auto;
+  padding: 15px;
+  width: 100%;
 }
 /* ===== TOP HEADER ===== */
 
@@ -1104,8 +1104,8 @@ body {
 /* ===== MAIN CONTENT ===== */
 .main-content {
   flex: 1;
-  padding: 30px;
-  overflow-y: auto;
+  padding: 15px;
+  width: 100%;
 }
 
 /* ===== TOP HEADER ===== */
