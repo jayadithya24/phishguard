@@ -1174,3 +1174,12 @@ body {
     cursor: pointer;
   }
 }
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.history-table {
+  min-width: 700px;
+}

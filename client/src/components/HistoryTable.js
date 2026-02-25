@@ -31,9 +31,6 @@ const HistoryTable = ({ refreshTrigger, user }) => {
     return "SAFE";
   };
 
-  /* =========================
-     COPY FUNCTION
-  ========================= */
   const handleCopy = async (text) => {
     try {
       if (navigator.clipboard && window.isSecureContext) {
@@ -54,9 +51,6 @@ const HistoryTable = ({ refreshTrigger, user }) => {
     }
   };
 
-  /* =========================
-     EXPORT CSV
-  ========================= */
   const handleExport = () => {
     if (!history.length) return;
 
@@ -75,9 +69,7 @@ const HistoryTable = ({ refreshTrigger, user }) => {
 
     const csvContent =
       "data:text/csv;charset=utf-8," +
-      [headers, ...rows]
-        .map((row) => row.join(","))
-        .join("\n");
+      [headers, ...rows].map((row) => row.join(",")).join("\n");
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -88,9 +80,6 @@ const HistoryTable = ({ refreshTrigger, user }) => {
     document.body.removeChild(link);
   };
 
-  /* =========================
-     DELETE (ADMIN ONLY)
-  ========================= */
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this scan?"
@@ -110,52 +99,62 @@ const HistoryTable = ({ refreshTrigger, user }) => {
   return (
     <>
       <div className="result-card">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap"
+          }}
+        >
           <h3>Scan History</h3>
           <button className="export-btn" onClick={handleExport}>
             Export CSV
           </button>
         </div>
 
-        <table className="history-table">
-          <thead>
-            <tr>
-              <th>URL</th>
-              <th>Score</th>
-              <th>Status</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {history.length === 0 ? (
+        {/* ✅ TABLE WRAPPER ADDED HERE */}
+        <div className="table-wrapper">
+          <table className="history-table">
+            <thead>
               <tr>
-                <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
-                  No scan history available.
-                </td>
+                <th>URL</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Date</th>
               </tr>
-            ) : (
-              history.map((item) => (
-                <tr
-                  key={item._id}
-                  className="clickable-row"
-                  onClick={() => setSelectedScan(item)}
-                >
-                  <td>{item.url}</td>
-                  <td>{item.urlRiskScore}%</td>
-                  <td>
-                    <span className={getBadge(item.urlRiskScore)}>
-                      {getStatusLabel(item.urlRiskScore)}
-                    </span>
-                  </td>
-                  <td>
-                    {new Date(item.createdAt).toLocaleString()}
+            </thead>
+
+            <tbody>
+              {history.length === 0 ? (
+                <tr>
+                  <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
+                    No scan history available.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                history.map((item) => (
+                  <tr
+                    key={item._id}
+                    className="clickable-row"
+                    onClick={() => setSelectedScan(item)}
+                  >
+                    <td>{item.url}</td>
+                    <td>{item.urlRiskScore}%</td>
+                    <td>
+                      <span className={getBadge(item.urlRiskScore)}>
+                        {getStatusLabel(item.urlRiskScore)}
+                      </span>
+                    </td>
+                    <td>
+                      {new Date(item.createdAt).toLocaleString()}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* ===== DETAIL PANEL ===== */}
@@ -209,7 +208,6 @@ const HistoryTable = ({ refreshTrigger, user }) => {
                 </p>
               )}
 
-              {/* 🔥 ADMIN DELETE BUTTON */}
               {user?.role === "admin" && (
                 <button
                   className="delete-btn"
