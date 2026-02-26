@@ -13,10 +13,14 @@ const API_BASE =
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    if (loading) return; // prevent double click
+    setLoading(true);
 
     try {
       const res = await fetch(`${API_BASE}/auth/login`, {
@@ -40,6 +44,8 @@ const Login = ({ onLogin }) => {
     } catch (error) {
       console.error("Login error:", error);
       alert("Server error. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,7 +53,7 @@ const Login = ({ onLogin }) => {
     <div style={{ padding: "50px", textAlign: "center" }}>
       <h2>🔐 Login to PhishGuard</h2>
 
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin} style={{ maxWidth: "400px", margin: "0 auto" }}>
         <input
           type="email"
           placeholder="Enter email"
@@ -66,7 +72,15 @@ const Login = ({ onLogin }) => {
         />
         <br /><br />
 
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? (
+            <>
+              <span className="spinner"></span> Logging in...
+            </>
+          ) : (
+            "Login"
+          )}
+        </button>
       </form>
 
       <p style={{ marginTop: "15px" }}>
