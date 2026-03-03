@@ -50,47 +50,48 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div style={{ padding: "50px", textAlign: "center" }}>
-      <h2>🔐 Login to PhishGuard</h2>
+  <div className="auth-wrapper">
+    <div className="auth-card">
+      <div className="auth-icon">🛡️</div>
 
-      <form onSubmit={handleLogin} style={{ maxWidth: "400px", margin: "0 auto" }}>
-        <input
-          type="email"
-          placeholder="Enter email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <br /><br />
+      <h2>Welcome Back</h2>
+      <p className="auth-subtitle">Login to PhishGuard</p>
 
-        <input
-          type="password"
-          placeholder="Enter password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <br /><br />
+      <form onSubmit={handleLogin} className="auth-form">
+        <div className="input-group">
+          <label>Email Address</label>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? (
-            <>
-              <span className="spinner"></span> Logging in...
-            </>
-          ) : (
-            "Login"
-          )}
+        <div className="input-group">
+          <label>Password</label>
+          <input
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <button type="submit" className="auth-btn">
+          Login →
         </button>
       </form>
 
-      <p style={{ marginTop: "15px" }}>
+      <p className="auth-footer">
         Don't have an account?{" "}
-        <Link to="/register" style={{ color: "#00d4ff" }}>
-          Register here
-        </Link>
+        <Link to="/register">Register here</Link>
       </p>
     </div>
-  );
+  </div>
+);
 };
 
 export default Login;
