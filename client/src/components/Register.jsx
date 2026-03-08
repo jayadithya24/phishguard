@@ -48,58 +48,78 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-wrapper">
-      <div className="auth-card">
-        <div className="auth-icon">🛡️</div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 px-4">
 
-        <h2>Create Account</h2>
-        <p className="auth-subtitle">Join PhishGuard</p>
+      <div className="w-full max-w-md bg-slate-800/90 backdrop-blur-lg p-10 rounded-2xl shadow-2xl border border-slate-700">
 
-        <form onSubmit={handleRegister} className="auth-form">
+        <div className="flex justify-center mb-4 text-4xl">🛡️</div>
 
-          <div className="input-group">
-            <label>Name</label>
+        <h2 className="text-3xl font-semibold text-center text-white">
+          Create Account
+        </h2>
+
+        <p className="text-center text-slate-400 mb-8">
+          Join PhishGuard
+        </p>
+
+        <form onSubmit={handleRegister} className="space-y-5">
+
+          <div>
+            <label className="text-sm text-slate-300">Name</label>
+
             <input
               type="text"
               placeholder="Enter your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              className="mt-2 w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
-          <div className="input-group">
-            <label>Email Address</label>
+          <div>
+            <label className="text-sm text-slate-300">Email Address</label>
+
             <input
               type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="mt-2 w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
-          <div className="input-group">
-            <label>Password</label>
+          <div>
+            <label className="text-sm text-slate-300">Password</label>
+
             <input
               type="password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="mt-2 w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
-          <button type="submit" className="auth-btn" disabled={loading}>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold hover:opacity-90 transition shadow-lg"
+          >
             {loading ? "Creating Account..." : "Register →"}
           </button>
 
         </form>
 
-        <p className="auth-footer">
+        <p className="text-center text-slate-400 mt-6">
           Already have an account?{" "}
-          <Link to="/login">Login here</Link>
+          <Link to="/login" className="text-blue-400 hover:underline">
+            Login here
+          </Link>
         </p>
+
       </div>
     </div>
   );

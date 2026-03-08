@@ -20,9 +20,9 @@ const HistoryTable = ({ refreshTrigger, user }) => {
   }, [refreshTrigger]);
 
   const getBadge = (score) => {
-    if (score >= 70) return "badge high";
-    if (score >= 40) return "badge suspicious";
-    return "badge safe";
+    if (score >= 70) return "bg-red-500 text-white";
+    if (score >= 40) return "bg-yellow-400 text-black";
+    return "bg-green-500 text-white";
   };
 
   const getStatusLabel = (score) => {
@@ -33,17 +33,7 @@ const HistoryTable = ({ refreshTrigger, user }) => {
 
   const handleCopy = async (text) => {
     try {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);
-      } else {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textArea);
-      }
-
+      await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch (err) {
@@ -59,11 +49,7 @@ const HistoryTable = ({ refreshTrigger, user }) => {
     const rows = history.map((item) => [
       item.url,
       item.urlRiskScore,
-      item.urlRiskScore >= 70
-        ? "HIGH RISK"
-        : item.urlRiskScore >= 40
-        ? "SUSPICIOUS"
-        : "SAFE",
+      getStatusLabel(item.urlRiskScore),
       new Date(item.createdAt).toLocaleString()
     ]);
 
@@ -73,18 +59,15 @@ const HistoryTable = ({ refreshTrigger, user }) => {
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "scan_history.csv");
+    link.href = encodedUri;
+    link.download = "scan_history.csv";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this scan?"
-    );
-    if (!confirmDelete) return;
+    if (!window.confirm("Delete this scan?")) return;
 
     try {
       await deleteHistory(id);
@@ -92,33 +75,33 @@ const HistoryTable = ({ refreshTrigger, user }) => {
       loadHistory();
     } catch (error) {
       console.error("Delete failed:", error);
-      alert(error.message);
     }
   };
 
   return (
     <>
-      <div className="result-card">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap"
-          }}
-        >
-          <h3>Scan History</h3>
-          <button className="export-btn" onClick={handleExport}>
+      <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+
+        {/* HEADER */}
+        <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+          <h3 className="text-lg font-semibold text-white">Scan History</h3>
+
+          <button
+            onClick={handleExport}
+            className="px-4 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded"
+          >
             Export CSV
           </button>
         </div>
 
-        {/* ✅ TABLE WRAPPER ADDED HERE */}
-        <div className="table-wrapper">
-          <table className="history-table">
-            <thead>
+        {/* TABLE */}
+        <div className="overflow-x-auto">
+
+          <table className="w-full text-sm text-left text-slate-300">
+
+            <thead className="border-b border-slate-700 text-slate-400 uppercase text-xs">
               <tr>
-                <th>URL</th>
+                <th className="py-3">URL</th>
                 <th>Score</th>
                 <th>Status</th>
                 <th>Date</th>
@@ -126,76 +109,103 @@ const HistoryTable = ({ refreshTrigger, user }) => {
             </thead>
 
             <tbody>
+
               {history.length === 0 ? (
                 <tr>
-                  <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
-                    No scan history available.
+                  <td colSpan="4" className="text-center py-6">
+                    No scan history available
                   </td>
                 </tr>
               ) : (
                 history.map((item) => (
                   <tr
                     key={item._id}
-                    className="clickable-row"
                     onClick={() => setSelectedScan(item)}
+                    className="border-b border-slate-700 hover:bg-slate-700 cursor-pointer transition"
                   >
-                    <td>{item.url}</td>
+                    <td className="py-3 break-all">{item.url}</td>
+
                     <td>{item.urlRiskScore}%</td>
+
                     <td>
-                      <span className={getBadge(item.urlRiskScore)}>
+                      <span
+                        className={`px-3 py-1 text-xs font-semibold rounded-full ${getBadge(
+                          item.urlRiskScore
+                        )}`}
+                      >
                         {getStatusLabel(item.urlRiskScore)}
                       </span>
                     </td>
+
                     <td>
                       {new Date(item.createdAt).toLocaleString()}
                     </td>
                   </tr>
                 ))
               )}
+
             </tbody>
+
           </table>
+
         </div>
       </div>
 
       {/* ===== DETAIL PANEL ===== */}
       {selectedScan && (
+
         <div
-          className="scan-detail-overlay"
+          className="fixed inset-0 bg-black/50 flex justify-end z-50"
           onClick={() => setSelectedScan(null)}
         >
+
           <div
-            className="scan-detail-panel"
+            className="w-[420px] bg-slate-900 h-full p-6 shadow-xl border-l border-slate-700 overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="panel-header">
-              <h3>Scan Details</h3>
-              <button onClick={() => setSelectedScan(null)}>✕</button>
+
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-semibold">Scan Details</h3>
+
+              <button
+                className="text-slate-400 hover:text-white"
+                onClick={() => setSelectedScan(null)}
+              >
+                ✕
+              </button>
             </div>
 
-            <div className="panel-content">
-              <div className="url-copy-row">
+            <div className="space-y-4 text-sm text-slate-300">
+
+              <div className="flex items-center gap-2 flex-wrap">
                 <strong>URL:</strong>
-                <span className="url-text">{selectedScan.url}</span>
+                <span className="break-all">{selectedScan.url}</span>
+
                 <button
-                  className={`copy-btn ${copied ? "copied" : ""}`}
                   onClick={() => handleCopy(selectedScan.url)}
+                  className="px-2 py-1 text-xs bg-blue-500 hover:bg-blue-600 rounded"
                 >
                   {copied ? "Copied!" : "Copy"}
                 </button>
               </div>
 
-              <p><strong>Risk Score:</strong> {selectedScan.urlRiskScore}%</p>
+              <p>
+                <strong>Risk Score:</strong>{" "}
+                {selectedScan.urlRiskScore}%
+              </p>
 
               <p>
                 <strong>Status:</strong>{" "}
-                <span className={getBadge(selectedScan.urlRiskScore)}>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs ${getBadge(
+                    selectedScan.urlRiskScore
+                  )}`}
+                >
                   {getStatusLabel(selectedScan.urlRiskScore)}
                 </span>
               </p>
 
-              <hr style={{ margin: "20px 0", opacity: 0.2 }} />
-
-              <h4>Analysis Metadata</h4>
+              <hr className="border-slate-700" />
 
               <p>
                 <strong>Scan Date:</strong>{" "}
@@ -204,20 +214,24 @@ const HistoryTable = ({ refreshTrigger, user }) => {
 
               {selectedScan.reason && (
                 <p>
-                  <strong>AI Explanation:</strong> {selectedScan.reason}
+                  <strong>AI Explanation:</strong>{" "}
+                  {selectedScan.reason}
                 </p>
               )}
 
               {user?.role === "admin" && (
                 <button
-                  className="delete-btn"
                   onClick={() => handleDelete(selectedScan._id)}
+                  className="mt-4 px-4 py-2 bg-red-500 hover:bg-red-600 rounded text-white text-sm"
                 >
                   Delete Scan
                 </button>
               )}
+
             </div>
+
           </div>
+
         </div>
       )}
     </>

@@ -27,24 +27,24 @@ const ThreatTrendChart = ({ refreshTrigger }) => {
     const loadData = async () => {
       try {
         const data = await fetchHistory();
-        setHistory(data);
+        setHistory(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Failed to load trend data", err);
       }
     };
 
     loadData();
-  }, [refreshTrigger]); // 🔥 refresh when new scan happens
+  }, [refreshTrigger]);
 
   const sorted = [...history].sort(
     (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
   );
 
-  const labels = sorted.map(item =>
+  const labels = sorted.map((item) =>
     new Date(item.createdAt).toLocaleTimeString()
   );
 
-  const scores = sorted.map(item => item.urlRiskScore);
+  const scores = sorted.map((item) => item.urlRiskScore);
 
   const data = {
     labels,
@@ -64,7 +64,7 @@ const ThreatTrendChart = ({ refreshTrigger }) => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // 🔥 IMPORTANT
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         labels: {
@@ -74,12 +74,12 @@ const ThreatTrendChart = ({ refreshTrigger }) => {
     },
     scales: {
       x: {
-        ticks: { color: "#ffffff" },
-        grid: { color: "rgba(255,255,255,0.1)" }
+        ticks: { color: "#cbd5e1" },
+        grid: { color: "rgba(255,255,255,0.05)" }
       },
       y: {
-        ticks: { color: "#ffffff" },
-        grid: { color: "rgba(255,255,255,0.1)" },
+        ticks: { color: "#cbd5e1" },
+        grid: { color: "rgba(255,255,255,0.05)" },
         min: 0,
         max: 100
       }
@@ -87,13 +87,16 @@ const ThreatTrendChart = ({ refreshTrigger }) => {
   };
 
   return (
-    <div className="analytics-card">
-      <h3>📈 Threat Trend Timeline</h3>
+    <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-lg">
 
-      {/* 🔥 FIX: Explicit Height */}
-      <div style={{ height: "300px", marginTop: "20px" }}>
+      <h3 className="text-lg font-semibold text-white mb-4">
+        📈 Threat Trend Timeline
+      </h3>
+
+      <div className="h-[300px]">
         <Line data={data} options={options} />
       </div>
+
     </div>
   );
 };

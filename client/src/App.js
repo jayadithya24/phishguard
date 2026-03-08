@@ -28,7 +28,9 @@ function ScanPage() {
   return (
     <>
       <div className="card">
-        <h2>🔍 AI Threat Scanner</h2>
+        <h2 className="text-3xl font-bold text-blue-500">
+🔍 AI Threat Scanner
+</h2>
         <ScanForm setResult={setResult} />
       </div>
 

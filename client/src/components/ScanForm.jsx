@@ -10,7 +10,6 @@ const ScanForm = ({ setResult }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation
     if (!url.trim() || !text.trim()) {
       setError("⚠ Please enter both URL and message text.");
       return;
@@ -28,10 +27,6 @@ const ScanForm = ({ setResult }) => {
         setResult(response);
       }
 
-      // Optional: Clear fields after scan
-      // setUrl("");
-      // setText("");
-
     } catch (err) {
       console.error("Scan failed:", err);
       setError("❌ Scan failed. Please check backend or login again.");
@@ -41,14 +36,18 @@ const ScanForm = ({ setResult }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="scan-form">
+  <div className="w-full bg-slate-800 border border-slate-700 rounded-2xl p-10 shadow-xl">
+
+    <form onSubmit={handleSubmit} className="space-y-5">
+
       <input
         type="text"
         placeholder="🔗 Enter suspicious URL"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         disabled={loading}
-        className="scan-input"
+        className="w-full bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-lg
+        focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 outline-none"
       />
 
       <textarea
@@ -56,16 +55,28 @@ const ScanForm = ({ setResult }) => {
         value={text}
         onChange={(e) => setText(e.target.value)}
         disabled={loading}
-        className="scan-textarea"
+        className="w-full bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-lg
+        focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 outline-none h-36"
       />
 
-      <button type="submit" disabled={loading}>
-  {loading ? "🔍 Scanning..." : "🚀 Scan Now"}
-</button>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full py-3 rounded-lg font-semibold text-white
+        bg-gradient-to-r from-cyan-500 to-blue-600
+        hover:from-cyan-400 hover:to-blue-500 transition"
+      >
+        {loading ? "Scanning..." : "🚀 Scan Now"}
+      </button>
 
-      {error && <p className="error-message">{error}</p>}
+      {error && (
+        <p className="text-red-400 text-sm text-center">{error}</p>
+      )}
+
     </form>
-  );
+
+  </div>
+);
 };
 
 export default ScanForm;

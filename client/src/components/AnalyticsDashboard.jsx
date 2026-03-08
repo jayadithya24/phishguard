@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useMemo } from "react";
 import { fetchHistory } from "../api";
 import { Bar } from "react-chartjs-2";
@@ -16,7 +15,7 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 const AnalyticsDashboard = ({ refreshTrigger }) => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("7"); // default 7 days
+  const [filter, setFilter] = useState("7");
 
   useEffect(() => {
     const loadData = async () => {
@@ -35,9 +34,7 @@ const AnalyticsDashboard = ({ refreshTrigger }) => {
     loadData();
   }, [refreshTrigger]);
 
-  /* =========================
-     FILTER BY DATE
-  ========================= */
+  /* FILTER HISTORY */
   const filteredHistory = useMemo(() => {
     const now = new Date();
 
@@ -55,9 +52,7 @@ const AnalyticsDashboard = ({ refreshTrigger }) => {
     return history.filter(h => new Date(h.createdAt) >= pastDate);
   }, [history, filter]);
 
-  /* =========================
-     COMPUTE DISTRIBUTION
-  ========================= */
+  /* DISTRIBUTION */
   const safe = filteredHistory.filter(h => h.urlRiskScore < 40).length;
   const suspicious = filteredHistory.filter(
     h => h.urlRiskScore >= 40 && h.urlRiskScore < 70
@@ -98,42 +93,65 @@ const AnalyticsDashboard = ({ refreshTrigger }) => {
   };
 
   return (
-    <div className="analytics-card">
-      <div className="analytics-header">
-        <h3>Threat Analytics Overview</h3>
-      </div>
+    <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-lg">
+
+      {/* HEADER */}
+      <h3 className="text-lg font-semibold text-white mb-4">
+        Threat Analytics Overview
+      </h3>
 
       {/* FILTER BUTTONS */}
-      <div className="analytics-filters">
+      <div className="flex gap-3 mb-4">
+
         <button
-          className={filter === "today" ? "active-filter" : ""}
           onClick={() => setFilter("today")}
+          className={`px-4 py-1 rounded text-sm transition
+          ${
+            filter === "today"
+              ? "bg-blue-500 text-white"
+              : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+          }`}
         >
           Today
         </button>
 
         <button
-          className={filter === "7" ? "active-filter" : ""}
           onClick={() => setFilter("7")}
+          className={`px-4 py-1 rounded text-sm transition
+          ${
+            filter === "7"
+              ? "bg-blue-500 text-white"
+              : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+          }`}
         >
           7 Days
         </button>
 
         <button
-          className={filter === "30" ? "active-filter" : ""}
           onClick={() => setFilter("30")}
+          className={`px-4 py-1 rounded text-sm transition
+          ${
+            filter === "30"
+              ? "bg-blue-500 text-white"
+              : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+          }`}
         >
           30 Days
         </button>
+
       </div>
 
+      {/* CHART */}
       {loading ? (
-        <div className="analytics-loading">Loading analytics...</div>
+        <div className="text-slate-400 text-sm">
+          Loading analytics...
+        </div>
       ) : (
-        <div style={{ height: "320px", marginTop: "20px" }}>
+        <div className="h-[320px]">
           <Bar data={chartData} options={options} />
         </div>
       )}
+
     </div>
   );
 };
