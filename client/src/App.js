@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SidebarLayout from "./components/SidebarLayout";
+import PublicLanding from "./components/PublicLanding";
 
 import ScanForm from "./components/ScanForm";
 import ResultCard from "./components/ResultCard";
@@ -87,7 +88,11 @@ function App() {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        setUser(decoded);
+        if (decoded.exp * 1000 > Date.now()) {
+          setUser(decoded);
+        } else {
+          localStorage.removeItem("token");
+        }
       } catch {
         localStorage.removeItem("token");
       }
@@ -96,16 +101,26 @@ function App() {
 
   return (
     <Routes>
+      {/* ===== PUBLIC LANDING ===== */}
+      <Route
+        path="/"
+        element={user ? <Navigate to="/dashboard" replace /> : <PublicLanding />}
+      />
+
       {/* ===== LOGIN ===== */}
       <Route
         path="/login"
         element={
-          <Login
-            onLogin={(token) => {
-              const decoded = jwtDecode(token);
-              setUser(decoded);
-            }}
-          />
+          user ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
+            <Login
+              onLogin={(token) => {
+                const decoded = jwtDecode(token);
+                setUser(decoded);
+              }}
+            />
+          )
         }
       />
 
@@ -158,7 +173,7 @@ function App() {
 />
 
       {/* ===== DEFAULT REDIRECT ===== */}
-      <Route path="*" element={<Navigate to="/dashboard" />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

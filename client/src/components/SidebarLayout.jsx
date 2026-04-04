@@ -117,7 +117,7 @@ const SidebarLayout = ({ user, setUser, children }) => {
               onClick={() => {
                 localStorage.removeItem("token");
                 setUser(null);
-                navigate("/login");
+                navigate("/");
               }}
               className="px-3 py-1 bg-red-500 rounded hover:bg-red-600 text-sm"
             >
