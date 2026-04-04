@@ -41,7 +41,7 @@ const Login = ({ onLogin }) => {
       if (res.ok) {
         localStorage.setItem("token", data.token);
         onLogin(data.token);
-        navigate("/dashboard");
+        navigate("/dashboard", { replace: true });
       } else {
         setError(data.message || "Login failed. Please check your credentials.");
       }
@@ -67,7 +67,7 @@ const Login = ({ onLogin }) => {
         </Link>
 
         <div className="relative mx-auto grid min-h-screen w-full max-w-6xl grid-cols-1 gap-10 px-4 py-10 pt-20 md:grid-cols-2 md:items-center md:px-6 md:pt-10">
-          <section>
+          <section className="hidden md:block">
             <span className="inline-flex rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1 text-sm text-cyan-300">
               PhishGuard secure access
             </span>

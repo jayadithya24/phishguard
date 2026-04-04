@@ -15,8 +15,17 @@ const SidebarLayout = ({ user, setUser, children }) => {
     setMobileOpen(false);
   }, [location.pathname]);
 
+  const getNavItemClass = (path) => {
+    const isActive = location.pathname === path;
+    return `flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 ${
+      isActive
+        ? "bg-gradient-to-r from-cyan-500/25 to-sky-500/25 text-cyan-200 ring-1 ring-cyan-400/40 shadow-[0_0_20px_rgba(34,211,238,0.18)]"
+        : "text-slate-200 hover:bg-slate-700/70 hover:text-white"
+    }`;
+  };
+
   return (
-    <div className="flex min-h-screen bg-slate-900 text-white">
+    <div className="flex min-h-screen bg-[radial-gradient(circle_at_10%_10%,#13233d_0%,#091225_35%,#050b19_100%)] text-white">
 
       {/* ===== MOBILE OVERLAY ===== */}
       {mobileOpen && (
@@ -28,21 +37,21 @@ const SidebarLayout = ({ user, setUser, children }) => {
 
       {/* ===== SIDEBAR ===== */}
       <div
-        className={`fixed md:relative z-50 bg-slate-800 border-r border-slate-700
+        className={`fixed md:relative z-50 bg-slate-900/90 border-r border-cyan-500/20 backdrop-blur-md
         transition-all duration-300
         ${collapsed ? "w-16" : "w-60"}
         ${mobileOpen ? "left-0" : "-left-60 md:left-0"}`}
       >
 
-        <div className="flex items-center justify-between p-4 border-b border-slate-700">
+        <div className="flex items-center justify-between p-4 border-b border-cyan-500/20">
 
-          <div className="font-semibold text-lg">
+          <div className="font-semibold text-lg text-cyan-100">
             {collapsed ? "🛡" : "🛡 PhishGuard"}
           </div>
 
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="text-slate-400 hover:text-white"
+            className="text-slate-400 hover:text-cyan-200"
           >
             {collapsed ? "➡" : "⬅"}
           </button>
@@ -54,14 +63,14 @@ const SidebarLayout = ({ user, setUser, children }) => {
 
           <Link
             to="/dashboard"
-            className="flex items-center gap-3 p-2 rounded hover:bg-slate-700"
+            className={getNavItemClass("/dashboard")}
           >
             🏠 {!collapsed && "Dashboard"}
           </Link>
 
           <Link
             to="/scan"
-            className="flex items-center gap-3 p-2 rounded hover:bg-slate-700"
+            className={getNavItemClass("/scan")}
           >
             🔍 {!collapsed && "Scan"}
           </Link>
@@ -69,7 +78,7 @@ const SidebarLayout = ({ user, setUser, children }) => {
           {user?.role === "admin" && (
             <Link
               to="/analytics"
-              className="flex items-center gap-3 p-2 rounded hover:bg-slate-700"
+              className={getNavItemClass("/analytics")}
             >
               📊 {!collapsed && "Analytics"}
             </Link>
@@ -77,7 +86,7 @@ const SidebarLayout = ({ user, setUser, children }) => {
 
           <Link
             to="/history"
-            className="flex items-center gap-3 p-2 rounded hover:bg-slate-700"
+            className={getNavItemClass("/history")}
           >
             🗂 {!collapsed && "History"}
           </Link>
@@ -89,7 +98,7 @@ const SidebarLayout = ({ user, setUser, children }) => {
       <div className="flex-1 flex flex-col">
 
         {/* ===== HEADER ===== */}
-        <header className="flex items-center justify-between bg-slate-800 border-b border-slate-700 px-6 h-16">
+        <header className="flex items-center justify-between bg-slate-900/80 border-b border-cyan-500/20 px-6 h-16 backdrop-blur-md">
 
           {/* Mobile menu button */}
           <button
@@ -99,17 +108,12 @@ const SidebarLayout = ({ user, setUser, children }) => {
             ☰
           </button>
 
-          <h2 className="text-lg font-semibold tracking-wide">
+          <h2 className="text-lg font-semibold tracking-wide text-cyan-100">
             {pageTitle}
           </h2>
 
           <div className="flex items-center gap-3">
-
-            <span className="text-sm text-slate-300">
-              {user?.email}
-            </span>
-
-            <span className="text-xs px-2 py-1 bg-blue-500 rounded">
+            <span className="rounded-full bg-cyan-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-cyan-200 ring-1 ring-cyan-400/35">
               {user?.role}
             </span>
 
@@ -119,7 +123,7 @@ const SidebarLayout = ({ user, setUser, children }) => {
                 setUser(null);
                 navigate("/");
               }}
-              className="px-3 py-1 bg-red-500 rounded hover:bg-red-600 text-sm"
+              className="rounded-lg bg-gradient-to-r from-rose-500 to-red-500 px-3 py-1.5 text-sm font-semibold text-white shadow-md shadow-red-900/30 transition hover:brightness-110"
             >
               Logout
             </button>
@@ -128,7 +132,7 @@ const SidebarLayout = ({ user, setUser, children }) => {
         </header>
 
         {/* ===== PAGE CONTENT ===== */}
-        <main className="p-6 flex-1">
+        <main className="flex-1 p-6">
           {children}
         </main>
 

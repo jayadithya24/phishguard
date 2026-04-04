@@ -6,10 +6,28 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
    🌍 API BASE (DEV + PRODUCTION SAFE)
 ========================================== */
 
-const API_BASE =
-  window.location.hostname === "localhost"
-    ? "http://localhost:5000/api"
-    : "https://phishguard-jqr9.onrender.com/api";
+const REGISTER_ENDPOINTS = (() => {
+  const origin = window.location.origin;
+  const host = window.location.hostname;
+  const isLocalHost = host === "localhost" || host === "127.0.0.1";
+
+  const candidateBases = [
+    isLocalHost ? "http://localhost:5000/api" : "https://phishguard-jqr9.onrender.com/api",
+    "https://phishguard-jqr9.onrender.com/api",
+    `${origin}/api`,
+    "http://localhost:5000/api"
+  ];
+
+  const uniqueBases = [...new Set(candidateBases)];
+  const endpoints = [];
+
+  for (const base of uniqueBases) {
+    endpoints.push(`${base}/auth/register`);
+    endpoints.push(`${base.replace(/\/api\/?$/, "")}/auth/register`);
+  }
+
+  return [...new Set(endpoints)];
+})();
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -25,33 +43,84 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    if (loading) return;
+
+    const normalizedName = name.trim();
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedPassword = password;
+
     setError("");
     setSuccess("");
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ name, email, password })
+      const payload = JSON.stringify({
+        name: normalizedName,
+        email: normalizedEmail,
+        password: normalizedPassword
       });
 
-      const data = await res.json().catch(() => ({}));
+      let res;
+      let raw = "";
+      let data = {};
+      let lastAttemptUrl = "";
 
-      if (res.ok) {
+      for (let i = 0; i < REGISTER_ENDPOINTS.length; i += 1) {
+        const currentUrl = REGISTER_ENDPOINTS[i];
+        lastAttemptUrl = currentUrl;
+
+        try {
+          res = await fetch(currentUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: payload
+          });
+
+          raw = await res.text();
+
+          try {
+            data = raw ? JSON.parse(raw) : {};
+          } catch {
+            data = {};
+          }
+
+          const isMissingRoute = res.status === 404 && /cannot post/i.test(raw);
+          const hasNextCandidate = i < REGISTER_ENDPOINTS.length - 1;
+
+          if (isMissingRoute && hasNextCandidate) {
+            continue;
+          }
+
+          break;
+        } catch (requestError) {
+          const hasNextCandidate = i < REGISTER_ENDPOINTS.length - 1;
+          if (hasNextCandidate) {
+            continue;
+          }
+          throw requestError;
+        }
+      }
+
+      if (res?.ok) {
         setSuccess("Account created successfully. Redirecting to login...");
         window.setTimeout(() => {
-          navigate("/login");
-        }, 1200);
+          navigate("/login", { replace: true });
+        }, 500);
       } else {
-        setError(data.message || "Registration failed. Please try again.");
+        const serverMessage =
+          data.message ||
+          data.error ||
+          (raw && raw.trim().slice(0, 180)) ||
+          `Registration failed (${res?.status || "unknown"})${lastAttemptUrl ? ` at ${lastAttemptUrl}` : ""}.`;
+
+        setError(serverMessage);
       }
 
     } catch (error) {
       console.error("Register error:", error);
-      setError("Server error. Please try again.");
+      setError("Could not reach the server. Please check backend status and try again.");
     } finally {
       setLoading(false);
     }
@@ -70,7 +139,7 @@ const Register = () => {
         </Link>
 
         <div className="relative mx-auto grid min-h-screen w-full max-w-6xl grid-cols-1 gap-10 px-4 py-10 pt-20 md:grid-cols-2 md:items-center md:px-6 md:pt-10">
-          <section>
+          <section className="hidden md:block">
             <span className="inline-flex rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1 text-sm text-cyan-300">
               Join the PhishGuard platform
             </span>

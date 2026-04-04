@@ -5,10 +5,17 @@ const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body; // ❌ removed role from body
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Name, email, and password are required" });
+    }
+
+    const normalizedEmail = String(email).trim().toLowerCase();
+    const normalizedName = String(name).trim();
 
     // Check if user exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -18,8 +25,8 @@ exports.register = async (req, res) => {
 
     // Create user (role automatically defaults to "user")
     const user = await User.create({
-      name,
-      email,
+      name: normalizedName,
+      email: normalizedEmail,
       password: hashedPassword
     });
 
@@ -29,6 +36,10 @@ exports.register = async (req, res) => {
 
   } catch (error) {
     console.error("REGISTER ERROR:", error);
+
+    if (error.code === 11000) {
+      return res.status(400).json({ message: "User already exists" });
+    }
 
     // Validation errors (like invalid email)
     if (error.name === "ValidationError") {

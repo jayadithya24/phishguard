@@ -29,33 +29,33 @@ const SecurityStats = ({ refreshTrigger }) => {
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
       {/* TOTAL */}
-      <div className="bg-slate-800 rounded-xl shadow-lg p-6 text-center border border-slate-700">
-        <h3 className="text-slate-400 text-sm mb-2">Total Scans</h3>
-        <p className="text-3xl font-bold text-white">
+      <div className="rounded-2xl border border-sky-400/30 bg-gradient-to-br from-slate-900 to-sky-950/40 p-6 text-center shadow-[0_10px_30px_rgba(14,165,233,0.12)]">
+        <h3 className="mb-2 text-sm font-medium tracking-wide text-sky-200">Total Scans</h3>
+        <p className="text-3xl font-extrabold text-sky-100">
           <CountUp end={stats.total} duration={0.8} />
         </p>
       </div>
 
       {/* SAFE */}
-      <div className="bg-slate-800 rounded-xl shadow-lg p-6 text-center border-l-4 border-green-500">
-        <h3 className="text-green-400 text-sm mb-2">Safe</h3>
-        <p className="text-3xl font-bold text-green-400">
+      <div className="rounded-2xl border border-emerald-400/35 bg-gradient-to-br from-slate-900 to-emerald-950/40 p-6 text-center shadow-[0_10px_30px_rgba(16,185,129,0.15)]">
+        <h3 className="mb-2 text-sm font-medium tracking-wide text-emerald-200">Safe</h3>
+        <p className="text-3xl font-extrabold text-emerald-300">
           <CountUp end={stats.safe} duration={0.8} />
         </p>
       </div>
 
       {/* SUSPICIOUS */}
-      <div className="bg-slate-800 rounded-xl shadow-lg p-6 text-center border-l-4 border-yellow-400">
-        <h3 className="text-yellow-400 text-sm mb-2">Suspicious</h3>
-        <p className="text-3xl font-bold text-yellow-400">
+      <div className="rounded-2xl border border-amber-300/40 bg-gradient-to-br from-slate-900 to-amber-950/40 p-6 text-center shadow-[0_10px_30px_rgba(245,158,11,0.13)]">
+        <h3 className="mb-2 text-sm font-medium tracking-wide text-amber-200">Suspicious</h3>
+        <p className="text-3xl font-extrabold text-amber-300">
           <CountUp end={stats.suspicious} duration={0.8} />
         </p>
       </div>
 
       {/* HIGH RISK */}
-      <div className="bg-slate-800 rounded-xl shadow-lg p-6 text-center border-l-4 border-red-500">
-        <h3 className="text-red-400 text-sm mb-2">High Risk</h3>
-        <p className="text-3xl font-bold text-red-400">
+      <div className="rounded-2xl border border-rose-400/35 bg-gradient-to-br from-slate-900 to-rose-950/40 p-6 text-center shadow-[0_10px_30px_rgba(244,63,94,0.14)]">
+        <h3 className="mb-2 text-sm font-medium tracking-wide text-rose-200">High Risk</h3>
+        <p className="text-3xl font-extrabold text-rose-300">
           <CountUp end={stats.high} duration={0.8} />
         </p>
       </div>
